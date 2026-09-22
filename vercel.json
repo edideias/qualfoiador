@@ -2,17 +2,17 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.ts",
+      "src": "api/handler.ts",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["server/**", "dist/**", "*.json"]
+        "includeFiles": ["dist/**", "server/**", "*.json"]
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/server.ts"
+      "dest": "/api/handler.ts"
     }
   ]
 }
