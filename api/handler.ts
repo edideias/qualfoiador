@@ -1,5 +1,5 @@
 // @ts-nocheck
 
-const { default: app } = require("../dist/server.cjs");
+import app from "../dist/server.cjs";
 
 export default app;
