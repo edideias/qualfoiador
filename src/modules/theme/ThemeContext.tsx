@@ -24,6 +24,7 @@ interface ThemeContextType {
   resetToDefault: (templateId?: string) => Promise<void>;
   restoreHistory: (historyId: string) => Promise<void>;
   loginWithGoogleCredential: (idToken: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogleFirebase: () => Promise<{ success: boolean; error?: string }>;
   loginWithEmail: (email: string) => Promise<{ success: boolean; error?: string }>;
   loginDirect: (email?: string, directAuth?: boolean) => Promise<{ success: boolean; error?: string }>;
   logoutAdmin: () => void;
@@ -180,6 +181,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return res;
   }, []);
 
+  const loginWithGoogleFirebase = useCallback(async () => {
+    const res = await themeService.adminLoginWithGoogleFirebase();
+    if (res.success && res.session) {
+      setAdminSession(res.session);
+    }
+    return res;
+  }, []);
+
   const loginWithEmail = useCallback(async (email: string) => {
     const res = await themeService.adminVerifyEmail(email);
     if (res.success && res.session) {
@@ -228,6 +237,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         resetToDefault,
         restoreHistory,
         loginWithGoogleCredential,
+        loginWithGoogleFirebase,
         loginWithEmail,
         loginDirect,
         logoutAdmin,

@@ -1,10 +1,14 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore, doc, getDocFromServer, Firestore } from 'firebase/firestore';
+import { getAuth, GoogleAuthProvider, signInWithPopup, OAuthCredential } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 export const db: Firestore = getFirestore(app, firebaseConfig.firestoreDatabaseId || '(default)');
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+export { signInWithPopup };
 
 export async function testFirestoreConnection(): Promise<boolean> {
   try {

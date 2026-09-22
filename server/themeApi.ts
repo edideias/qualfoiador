@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { Router, Request, Response, NextFunction } from "express";
+const firebaseConfig = require("../firebase-applet-config.json");
 
 type ThemeConfig = Record<string, unknown>;
 interface ThemeHistoryEntry {
@@ -302,25 +303,38 @@ themeRouter.get("/theme", (_req, res) => {
   res.json(activeTheme);
 });
 
-// 2. ADMIN AUTH: Verify Google ID Token from Google Identity Services
+// 2. ADMIN AUTH: Verify Firebase ID Token from Firebase Auth
 themeRouter.post("/admin/auth/google", async (req, res) => {
   try {
     const { idToken } = req.body;
     if (!idToken || typeof idToken !== "string") {
-      return res.status(400).json({ success: false, error: "ID Token do Google é obrigatório." });
+      return res.status(400).json({ success: false, error: "ID Token do Firebase é obrigatório." });
     }
 
-    // Call Google's official token verification endpoint
-    const googleVerifyUrl = `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`;
-    const googleRes = await fetch(googleVerifyUrl);
-    
-    if (!googleRes.ok) {
-      return res.status(401).json({ success: false, error: "Token do Google inválido ou expirado." });
+    // Verify Firebase ID token via Identity Toolkit API
+    const projectId = firebaseConfig.projectId;
+    const apiKey = firebaseConfig.apiKey;
+    const verifyUrl = `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`;
+    const firebaseRes = await fetch(verifyUrl, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+
+    if (!firebaseRes.ok) {
+      const errData = await firebaseRes.json().catch(() => ({}));
+      return res.status(401).json({ success: false, error: errData.error?.message || "Token do Firebase inválido ou expirado." });
     }
 
-    const googleData = await googleRes.json();
-    const userEmail = (googleData.email || "").toLowerCase().trim();
-    const isEmailVerified = googleData.email_verified === "true" || googleData.email_verified === true;
+    const firebaseData = await firebaseRes.json();
+    const user = firebaseData.users?.[0];
+    if (!user) {
+      return res.status(401).json({ success: false, error: "Usuário não encontrado na verificação do token." });
+    }
+
+    const userEmail = (user.email || "").toLowerCase().trim();
+    const isEmailVerified = user.emailVerified === true;
 
     if (!isEmailVerified) {
       return res.status(403).json({ success: false, error: "E-mail Google não verificado pelo provedor." });
@@ -333,11 +347,11 @@ themeRouter.post("/admin/auth/google", async (req, res) => {
       });
     }
 
-    const session = createSessionToken(userEmail, googleData.name || userEmail.split("@")[0], googleData.picture);
+    const session = createSessionToken(userEmail, user.displayName || userEmail.split("@")[0], user.photoUrl);
     return res.json({ success: true, session });
   } catch (error: unknown) {
-    console.error("Erro na validação Google OAuth:", error);
-    return res.status(500).json({ success: false, error: "Falha na verificação com a Google Identity API." });
+    console.error("Erro na validação Firebase OAuth:", error);
+    return res.status(500).json({ success: false, error: "Falha na verificação com a Firebase Auth API." });
   }
 });
 

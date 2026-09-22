@@ -7,6 +7,7 @@ import {
   loadActiveThemeFromFirestore,
   saveThemeHistoryToFirestore,
 } from '../firebase/firestoreService';
+import { signInWithPopup, auth, googleProvider } from '../../lib/firebase';
 
 const STORAGE_ACTIVE_KEY = 'qual_e_a_sua_dor:theme:active';
 const STORAGE_DRAFT_KEY = 'qual_e_a_sua_dor:theme:draft';
@@ -242,6 +243,21 @@ class ThemeService {
       return { success: true, session: data.session };
     } catch (err: any) {
       return { success: false, error: err.message || 'Erro de conexão com o servidor.' };
+    }
+  }
+
+  public async adminLoginWithGoogleFirebase(): Promise<{ success: boolean; error?: string; session?: AdminSession }> {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken(true);
+
+      if (!idToken) {
+        return { success: false, error: 'Não foi possível obter o token de autenticação do Google.' };
+      }
+
+      return this.adminLoginWithGoogleCredential(idToken);
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Falha no login com Google.' };
     }
   }
 

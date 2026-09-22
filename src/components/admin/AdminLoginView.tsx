@@ -1,88 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '../../modules/theme/ThemeContext';
-import { ShieldCheck, Lock, AlertCircle, ArrowLeft, Loader2, CheckCircle2, Mail, Key } from 'lucide-react';
+import { themeService } from '../../modules/theme/themeService';
+import { ShieldCheck, Lock, AlertCircle, ArrowLeft, Loader2, CheckCircle2, Mail, Key, Chrome } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface AdminLoginViewProps {
   onNavigateHome: () => void;
 }
 
-declare global {
-  interface Window {
-    google?: {
-      accounts: {
-        id: {
-          initialize: (config: any) => void;
-          renderButton: (parent: HTMLElement, options: any) => void;
-          prompt: () => void;
-        };
-      };
-    };
-  }
-}
-
 export const AdminLoginView: React.FC<AdminLoginViewProps> = ({ onNavigateHome }) => {
-  const { loginWithGoogleCredential, loginWithEmail } = useTheme();
+  const { loginWithEmail } = useTheme();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [emailInput, setEmailInput] = useState('');
 
-  // Initialize Google Identity Services if available in browser
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
 
-    const initGsi = () => {
-      if (window.google?.accounts?.id) {
-        try {
-          const clientId = (window as any).__GOOGLE_CLIENT_ID__ || '548239023401-sample.apps.googleusercontent.com';
-          window.google.accounts.id.initialize({
-            client_id: clientId,
-            callback: async (response: { credential?: string }) => {
-              if (response.credential) {
-                setLoading(true);
-                setErrorMessage(null);
-                setSuccessMessage(null);
-                const res = await loginWithGoogleCredential(response.credential);
-                setLoading(false);
-                if (!res.success) {
-                  setErrorMessage(res.error || 'Autenticação Google recusada. Esta conta não possui privilégios de administrador.');
-                } else {
-                  setSuccessMessage('Conta Google autenticada e autorizada com sucesso!');
-                }
-              }
-            },
-          });
+    const res = await themeService.adminLoginWithGoogleFirebase();
+    setLoading(false);
 
-          const buttonParent = document.getElementById('google-signin-btn-container');
-          if (buttonParent) {
-            buttonParent.innerHTML = '';
-            window.google.accounts.id.renderButton(buttonParent, {
-              theme: 'filled_black',
-              size: 'large',
-              shape: 'pill',
-              text: 'signin_with',
-              locale: 'pt-BR',
-              width: 320,
-            });
-          }
-        } catch (err) {
-          console.warn('GSI init note:', err);
-        }
-      }
-    };
-
-    if (!window.google?.accounts?.id) {
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      script.onload = initGsi;
-      document.head.appendChild(script);
+    if (!res.success) {
+      setErrorMessage(res.error || 'Autenticação Google recusada.');
     } else {
-      initGsi();
+      setSuccessMessage('Conta Google autenticada e autorizada com sucesso!');
     }
-  }, [loginWithGoogleCredential]);
+  };
 
   const handleEmailAuthorizationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,9 +118,22 @@ export const AdminLoginView: React.FC<AdminLoginViewProps> = ({ onNavigateHome }
           </div>
         )}
 
-        {/* Google Identity Services Container if supported */}
+        {/* Google Login Button */}
         <div className="mb-6 flex flex-col items-center">
-          <div id="google-signin-btn-container" className="flex justify-center w-full min-h-[44px]" />
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="w-full min-h-[46px] py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 active:scale-[0.99] text-stone-950 font-extrabold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md disabled:opacity-50 mb-2"
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin text-stone-950" />
+            ) : (
+              <>
+                <Chrome className="w-5 h-5" />
+                <span>Fazer Login com o Google</span>
+              </>
+            )}
+          </button>
         </div>
 
         {/* Google Account Email & Authorization Form */}
