@@ -1,0 +1,84 @@
+[
+  {
+    "id": "hist-initial",
+    "themeId": "uber-minimal",
+    "themeName": "Uber Minimal",
+    "publishedAt": "2026-09-11T18:54:19.038Z",
+    "publishedBy": "Administrador",
+    "config": {
+      "id": "uber-minimal",
+      "name": "Uber Minimal",
+      "tagline": "Simplicidade extrema, máxima legibilidade e alto contraste",
+      "description": "Inspirado na usabilidade de grandes apps de mobilidade. Preto, branco e sutil destaque amarelo.",
+      "version": 1,
+      "typography": {
+        "headingFont": "Plus Jakarta Sans",
+        "bodyFont": "Plus Jakarta Sans",
+        "titleDesktopSize": 58,
+        "titleMobileSize": 38,
+        "titleWeight": 800,
+        "titleLineHeight": 1.05,
+        "titleLetterSpacing": "-0.035em",
+        "subtitleDesktopSize": 22,
+        "subtitleMobileSize": 18,
+        "subtitleWeight": 700,
+        "subtitleLineHeight": 1.25,
+        "subtitleLetterSpacing": "-0.02em",
+        "cardTitleSize": 24,
+        "cardTitleWeight": 800,
+        "cardTextSize": 14,
+        "cardTextWeight": 500,
+        "cardTextLineHeight": 1.45,
+        "buttonTextSize": 14,
+        "buttonTextWeight": 700,
+        "buttonLetterSpacing": "-0.01em",
+        "badgeSize": 11,
+        "badgeWeight": 700,
+        "footerSize": 12
+      },
+      "colors": {
+        "background": "#fafaf9",
+        "cardBackground": "#ffffff",
+        "cardBackgroundHover": "#f5f5f4",
+        "textPrimary": "#0c0a09",
+        "textSecondary": "#57534e",
+        "accent": "#f59e0b",
+        "accentMuted": "#fef3c7",
+        "buttonBackground": "#0c0a09",
+        "buttonText": "#ffffff",
+        "buttonHoverBackground": "#1c1917",
+        "border": "#e7e5e4",
+        "badgeBackground": "#f5f5f4",
+        "badgeText": "#44403c",
+        "iconBoxBackground": "#f5f5f4",
+        "iconColor": "#0c0a09",
+        "isDark": false
+      },
+      "layout": {
+        "maxWidth": 920,
+        "topSpacing": 48,
+        "heroSpacing": 40,
+        "cardGap": 24,
+        "cardPadding": 32,
+        "borderRadius": 24,
+        "borderWidth": 1
+      },
+      "cards": {
+        "borderRadius": 24,
+        "borderWidth": 1,
+        "shadow": "xs",
+        "iconSize": 26,
+        "hoverLift": true
+      },
+      "buttons": {
+        "height": 52,
+        "borderRadius": 16,
+        "paddingX": 20,
+        "arrowStyle": "box",
+        "shadow": "xs",
+        "hoverEffect": "lift"
+      }
+    },
+    "status": "active"
+  }
+]

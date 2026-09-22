@@ -1,0 +1,103 @@
+{
+  "entities": {
+    "AppThemeConfig": {
+      "title": "AppThemeConfig",
+      "description": "Full application theme, visual configuration, layout and text settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "tagline": { "type": "string" },
+        "description": { "type": "string" },
+        "version": { "type": "number" },
+        "typography": { "type": "object" },
+        "colors": { "type": "object" },
+        "layout": { "type": "object" },
+        "cards": { "type": "object" },
+        "buttons": { "type": "object" },
+        "content": { "type": "object" },
+        "positions": { "type": "object" },
+        "visibility": { "type": "object" },
+        "heroLogo": { "type": "object" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "version"]
+    },
+    "MascotCustomization": {
+      "title": "MascotCustomization",
+      "description": "Customized mascot character asset data",
+      "type": "object",
+      "properties": {
+        "key": { "type": "string" },
+        "name": { "type": "string" },
+        "defaultSrc": { "type": "string" },
+        "fallbackSrc": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "updatedBy": { "type": "string" }
+      },
+      "required": ["key", "defaultSrc"]
+    },
+    "ThemeHistoryEntry": {
+      "title": "ThemeHistoryEntry",
+      "description": "Audit entry of published theme versions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "themeId": { "type": "string" },
+        "themeName": { "type": "string" },
+        "publishedAt": { "type": "string" },
+        "publishedBy": { "type": "string" },
+        "config": { "type": "object" },
+        "status": { "type": "string", "enum": ["active", "archived"] }
+      },
+      "required": ["id", "themeId", "publishedAt"]
+    },
+    "ReportedSolution": {
+      "title": "ReportedSolution",
+      "description": "User reported solution or emergency issue",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "problemTitle": { "type": "string" },
+        "solutionTitle": { "type": "string" },
+        "reason": { "type": "string" },
+        "details": { "type": "string" },
+        "reportedAt": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "reviewed", "resolved"] }
+      },
+      "required": ["id", "problemTitle", "reportedAt"]
+    },
+    "ConnectionTest": {
+      "title": "ConnectionTest",
+      "description": "Heartbeat document for validating client-server Firestore connection",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["status"]
+    }
+  },
+  "firestore": {
+    "/app_config/{configId}": {
+      "schema": "AppThemeConfig",
+      "description": "Global application configuration and themes"
+    },
+    "/mascot_customizations/{mascotKey}": {
+      "schema": "MascotCustomization",
+      "description": "Custom user uploaded or configured mascot images"
+    },
+    "/theme_history/{historyId}": {
+      "schema": "ThemeHistoryEntry",
+      "description": "History of published themes"
+    },
+    "/reported_solutions/{reportId}": {
+      "schema": "ReportedSolution",
+      "description": "User reported issues"
+    },
+    "/test/{docId}": {
+      "schema": "ConnectionTest",
+      "description": "Connection verification document"
+    }
+  }
+}

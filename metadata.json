@@ -1,0 +1,6 @@
+{
+  "name": "Qual a sua dor?",
+  "description": "Resolvedor inteligente de problemas da vida moderna e incômodos físicos. Ação imediata, menos texto e mais solução.",
+  "requestFramePermissions": ["geolocation", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

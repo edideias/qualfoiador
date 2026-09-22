@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Global default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Connection test document (public for health checks)
+    match /test/{docId} {
+      allow read, write: if isValidId(docId);
+    }
+
+    // App theme and visual configuration (admin write, public read)
+    match /app_config/{configId} {
+      allow read: if isValidId(configId);
+      allow write: if isAdmin() && isValidId(configId);
+    }
+
+    // Mascot customizations and uploaded assets (admin write, public read)
+    match /mascot_customizations/{mascotKey} {
+      allow read: if isValidId(mascotKey);
+      allow write: if isAdmin() && isValidId(mascotKey);
+    }
+
+    // Theme history versions (admin write, public read)
+    match /theme_history/{historyId} {
+      allow read: if isValidId(historyId);
+      allow write: if isAdmin() && isValidId(historyId);
+    }
+
+    // User reported solutions and feedback
+    // Anyone can create reports; only admins can read all or update status
+    match /reported_solutions/{reportId} {
+      allow create: if isValidId(reportId);
+      allow read, update, delete: if isAdmin() && isValidId(reportId);
+    }
+  }
+}

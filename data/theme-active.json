@@ -1,0 +1,90 @@
+{
+  "id": "uber-minimal",
+  "name": "Qual a sua dor? (Oficial)",
+  "tagline": "Fundo branco puro, preto profundo e lilás neon vibrante",
+  "description": "Identidade visual oficial da marca. Branco puro, botões pretos de alto contraste e destaques em lilás neon.",
+  "version": 2,
+  "typography": {
+    "headingFont": "Plus Jakarta Sans",
+    "bodyFont": "Plus Jakarta Sans",
+    "titleDesktopSize": 58,
+    "titleMobileSize": 38,
+    "titleWeight": 800,
+    "titleLineHeight": 1.05,
+    "titleLetterSpacing": "-0.035em",
+    "subtitleDesktopSize": 22,
+    "subtitleMobileSize": 18,
+    "subtitleWeight": 700,
+    "subtitleLineHeight": 1.25,
+    "subtitleLetterSpacing": "-0.02em",
+    "cardTitleSize": 24,
+    "cardTitleWeight": 800,
+    "cardTextSize": 14,
+    "cardTextWeight": 500,
+    "cardTextLineHeight": 1.45,
+    "buttonTextSize": 14,
+    "buttonTextWeight": 700,
+    "buttonLetterSpacing": "-0.01em",
+    "badgeSize": 11,
+    "badgeWeight": 700,
+    "footerSize": 12
+  },
+  "colors": {
+    "background": "#eaf4ff",
+    "cardBackground": "#ffffff",
+    "cardBackgroundHover": "#faf5ff",
+    "textPrimary": "#09090b",
+    "textSecondary": "#52525b",
+    "accent": "#a855f7",
+    "accentMuted": "#f3e8ff",
+    "buttonBackground": "#09090b",
+    "buttonText": "#ffffff",
+    "buttonHoverBackground": "#7e22ce",
+    "border": "#e4e4e7",
+    "badgeBackground": "#faf5ff",
+    "badgeText": "#7c3aed",
+    "iconBoxBackground": "#09090b",
+    "iconColor": "#c084fc",
+    "isDark": false
+  },
+  "layout": {
+    "maxWidth": 920,
+    "topSpacing": 48,
+    "heroSpacing": 40,
+    "cardGap": 24,
+    "cardPadding": 32,
+    "borderRadius": 24,
+    "borderWidth": 1
+  },
+  "cards": {
+    "borderRadius": 24,
+    "borderWidth": 1,
+    "shadow": "xs",
+    "iconSize": 26,
+    "hoverLift": true
+  },
+  "buttons": {
+    "height": 52,
+    "borderRadius": 16,
+    "paddingX": 20,
+    "arrowStyle": "box",
+    "shadow": "xs",
+    "hoverEffect": "lift"
+  },
+  "positions": {
+    "heroAlign": "center",
+    "cardsLayout": "grid",
+    "cardsOrder": "physical_first",
+    "sectionOrder": "hero_search_cards",
+    "buttonsAlign": "stretch",
+    "searchPosition": "above_cards",
+    "headerLayout": "standard"
+  },
+  "content": {
+    "heroSubtitle": "Conta pra gente o que está pegando: pode ser uma dor no corpo ou um perrengue do dia a dia. A gente te ajuda a resolver sem enrolação.",
+    "searchTitle": "O que você precisa resolver agora?",
+    "searchSubtitle": "Escreva com suas próprias palavras ou escolha um caso rápido:",
+    "searchPlaceholder": "Ex: dor nas costas, perdi a chave de casa, pneu furou, dentista urgente...",
+    "searchButtonText": "Resolver direto"
+  }
+}
