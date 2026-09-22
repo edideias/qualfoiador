@@ -262,7 +262,7 @@ Retorne estritamente um JSON no seguinte formato:
     "problemIdentified": "Nome curto do problema (ex: Pneu Furado, Cano Estourou)",
     "urgency": "URGENTE" | "RESOLVER_LOGO" | "PODE_ESPERAR",
     "urgencyLabel": "URGENTE" | "PRECISO RESOLVER LOGO" | "PODE ESPERAR",
-    "immediateInstruction": "Uma frase dizendo exatamente o que fazer agora nos primeiros segundos.",
+    "    immediateInstruction": "Uma frase dizendo exatamente o que fazer agora nos primeiros segundos.",
     "immediateSafetySteps": [
       "1. Passo rápido 1",
       "2. Passo rápido 2",
@@ -310,6 +310,14 @@ Retorne estritamente um JSON no seguinte formato:
     "locationNeeded": true
   }
 }
+
+REGRAS ANTI-GENERICIDADE (OBRIGATÓRIO - VIOLAR GERA FALHA NA RESPOSTA):
+1. NUNCA invente nomes fictícios de empresas. SEMPRE indique a categoria exata de busca para Google Maps (ex: "borracharia 24h", "chaveiro com estrela", "distribuidora de gás a domicílio", "encanador residencial", "eletricista de confiança").
+2. NUNCA diga "consulte um profissional", "procure ajuda", "dependendo da situação".
+3. Use linguagem brasileira coloquial e direta: "Corre", "Faz isso agora", "Vai logo", "Já".
+4. Dê instruções com PASSOS NUMERADOS, bem específicos, com tempo estimado.
+5. Para serviços: sempre cite o tipo real de serviço brasileiro (ex: "chaveiro 24h", "borracharia", "encanador", "eletricista", "distribuidora de gás", "oficina mecânica").
+6. Seja HUMANO e EMPATÉTICO - fale como um amigo que entende seu estresse.
 `;
 
     if (ai) {
@@ -321,7 +329,9 @@ Retorne estritamente um JSON no seguinte formato:
             contents: prompt,
             config: {
               responseMimeType: "application/json",
-              temperature: 0.1,
+              temperature: 0.4,
+              topP: 0.9,
+              topK: 40,
             },
           });
 
@@ -391,20 +401,22 @@ Retorne EXCLUSIVAMENTE um objeto JSON válido com este formato:
     const candidateModels = ["gemini-3.8-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"];
     for (const model of candidateModels) {
       try {
-        const response = await ai.models.generateContent({
-          model,
-          contents: prompt,
-          config: {
-            responseMimeType: "application/json",
-            temperature: 0.2,
-          },
-        });
+          const response = await ai.models.generateContent({
+            model,
+            contents: prompt,
+            config: {
+              responseMimeType: "application/json",
+              temperature: 0.5,
+              topP: 0.9,
+              topK: 40,
+            },
+          });
 
-        if (response.text) {
-          const parsed = JSON.parse(response.text);
-          if (parsed && parsed.summaryParagraph && parsed.interpretationParagraph) {
-            return res.json(parsed);
-          }
+          if (response.text) {
+            const parsed = JSON.parse(response.text);
+            if (parsed && parsed.summaryParagraph && parsed.interpretationParagraph) {
+              return res.json(parsed);
+            }
         }
       } catch (err: unknown) {
         console.warn(`Tentativa com ${model} em analyze-physical-pain falhou, tentando próximo:`, getErrorMessage(err));
@@ -488,11 +500,18 @@ Retorne EXCLUSIVAMENTE um objeto JSON válido, com a seguinte estrutura e tipos 
     "thisWeek": string (o ajuste a fazer nesta semana para o problema não se repetir),
     "nextMonth": string (como garantir que no próximo mês você esteja livre dessa dor)
   },
-  "transformation": {
+    "transformation": {
     "today": string (como é o dia a dia vivendo com essa dor),
     "withoutPain": string (como fica a vida, o tempo e a cabeça sem essa dor)
   }
 }
+
+REGRAS ANTI-GENERICIDADE (OBRIGATÓRIO):
+1. NUNCA use frases como "entendo sua frustração", "isso é normal", "você não está sozinho", "precisamos trabalhar isso".
+2. NUNCA diga "automatize processos", "simplifique rotinas", "elimine estresse". SEJA ESPECÍFICO: cite ferramenta real (ex: "Notion", "Trello", "Google Calendar", "WhatsApp Business", "PIX"), técnica real (ex: "bloqueio de 25 min", "regra 2-minutos", "método Eisenhower").
+3. NUNCA invente nomes genéricos. SEMPRE referencie o contexto brasileiro: "extrato do Banco do Brasil", "PIX trocado no WhatsApp", "motorista do iFood", "chaveiro 24h", "borracharia".
+4. Cada descrição deve ser uma ação prática, não uma frase abstrata.
+5. A linguagem deve ser direta, como se um amigo experiente estivesse falando com você.
 `;
 
     if (ai) {
@@ -504,7 +523,9 @@ Retorne EXCLUSIVAMENTE um objeto JSON válido, com a seguinte estrutura e tipos 
             contents: prompt,
             config: {
               responseMimeType: "application/json",
-              temperature: 0.2,
+              temperature: 0.5,
+              topP: 0.9,
+              topK: 40,
             },
           });
 
@@ -631,6 +652,8 @@ RESPONDA COM:
       contents: prompt,
       config: {
         temperature: 0.4,
+        topP: 0.9,
+        topK: 40,
       },
     });
 
@@ -712,7 +735,9 @@ Retorne APENAS um JSON válido com o seguinte formato:
           contents: prompt,
           config: {
             responseMimeType: "application/json",
-            temperature: 0.1,
+            temperature: 0.3,
+            topP: 0.85,
+            topK: 30,
           },
         });
 
